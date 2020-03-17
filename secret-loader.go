@@ -14,7 +14,7 @@ import (
 
 func main() {
 
-	prefix := flag.String("prefix", "string:", "(optional) prefix of the secret defined in the env var")
+	prefix := flag.String("prefix", "secret:", "(optional) prefix of the secret defined in the env var")
 	flag.Parse()
 
 	loadSecret(*prefix)
