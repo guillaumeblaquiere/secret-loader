@@ -1,0 +1,17 @@
+steps:
+  - name: 'gcr.io/cloud-builders/go'
+    entrypoint: "/bin/sh"
+    args:
+      - -c
+      - |
+        GOARCH=amd64 GOOS=windows go build -o win64/secret-loader.exe secret-loader.go
+        GOARCH=amd64 GOOS=linux go build -o linux64/secret-loader secret-loader.go
+        GOARCH=amd64 GOOS=darwin go build -o darwin64/secret-loader secret-loader.go
+  - name: 'gcr.io/cloud-builders/gsutil'
+    entrypoint: "/bin/sh"
+    args:
+      - -c
+      - |
+        gsutil -h 'Content-Disposition:filename=secret-loader.exe' cp win64/secret-loader.exe gs://secret-loader/$BRANCH_NAME/win64/
+        gsutil -h 'Content-Disposition:filename=secret-loader'  cp linux64/secret-loader gs://secret-loader/$BRANCH_NAME/linux64/
+        gsutil -h 'Content-Disposition:filename=secret-loader'  cp darwin64/secret-loader gs://secret-loader/$BRANCH_NAME/darwin64/
